@@ -1,0 +1,5 @@
+#!/bin/bash
+pip install ipython
+pip install pyx
+pip install cryptography
+pip install matplotlib
