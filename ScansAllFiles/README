@@ -1,3 +1,9 @@
 There are two things in the folder
 1. There is the python code for the payload that scans for every file assocaited with the computer
 2. There is the executable that looks like a mincraft block (should be called mincrafts)
+
+
+
+I just added a python code called alltogether that implements the concolse (front end of the code) and the payload.
+---> when you call the run command in the conosole it will create the payload
+
