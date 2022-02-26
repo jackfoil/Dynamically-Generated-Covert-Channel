@@ -1,0 +1,95 @@
+Packet Interception Notes
+
+Goal:
+Test scapy packet interception functionality
+create tutorial to display these functions to team
+
+Stretch Goal:
+Implement PacketIntercept class
+
+Notes:
+Send packet:
+    send(): sends packet at layer 3
+    sendp(): sends packet at layer 2
+    sr(): send packets and receive answers layer 3
+    srp(): send packets and receive answers layer 2
+
+sr1():
+Help on function sr1 in module scapy.sendrecv:
+
+sr1(x, promisc=None, filter=None, iface=None, nofilter=0, *args, **kargs)
+    Send packets at layer 3 and return only the first answer
+
+    :param pks: SuperSocket instance to send/receive packets
+    :param pkt: the packet to send
+    :param rcv_pks: if set, will be used instead of pks to receive packets.
+        packets will still be sent through pks
+    :param nofilter: put 1 to avoid use of BPF filters
+    :param retry: if positive, how many times to resend unanswered packets
+        if negative, how many times to retry when no more packets
+        are answered
+    :param timeout: how much time to wait after the last packet has been sent
+    :param verbose: set verbosity level
+    :param multi: whether to accept multiple answers for the same stimulus
+    :param prebuild: pre-build the packets before starting to send them.
+        Automatically enabled when a generator is passed as the packet
+    
+
+APPLICATION LAYER PROTOCOLS (L4)
+HTTP,RDP,DHCP,DNS,TELNET,SMTP,SSH,TFTP,SMTP,FTP
+TRANSPORT LAYER(L3)
+TCP, UDP
+NETWORK LAYER(L2)
+IP, ICMP, ARP, IGMP
+LINK LAYER(L1)
+Ether
+
+mitmproxy: only HTTP/1, HTTP/2, and WebSockets
+
+ThOts:
+ONE WAY COMM PIGGYBACK
+--------------------------
+pretend to be target's target (poison target arp cache)
+Packet sent to us
+inject src address & forward packt to dst
+ - Communication established with us and dst
+dst sends packet to us
+we inject info/bits/memes/your mom jokes
+forward/send packet to target
+
+ARP POISON METHODS
+1. Modify target's ARP table entry
+arp /s <inetaddr> <etheraddr> <ifaceaddr>
+- inetaddr: ip address
+- etheraddr: MAC address
+- ifaceaddr: interface address
+2. Poison target's ARP cache with scapy
+- Target machine: windows ip
+- Attack machine: kali 10.172.188.143
+- Gateway: windows machine (IP config)
+
+2022-02-01 NOTES
+- ip forwarding needs to be enabled on attacker machine
+- ATTACKER: kali machine
+- TARGET: Windows 10 Machine
+- GATEWAY: actual gateway
+- Realized I need to build a proxy not spoof the arp cache :face_palm
+
+2022-02-01
+- application layer proxy to intercept packets
+- proxy options
+- - code to create TCP proxy: 
+- - https://medium.com/@gdieu/build-a-tcp-proxy-in-python-part-1-3-7552cd5afdfe
+- - https://gist.github.com/thiagorb/c8120c1529e9fac443143694f396a7ff
+- - - use this code to redirect traffic to a different port on the same machine
+- - - inject it
+- what we need is a forward proxy
+- proxy for each type of piggy back covert channel
+- 
+MISC CODE
+# function to enable ip forwarding in windows
+def forward():
+    subprocess.run(["powershell","-Command",CMD],capture_output=False)
+
+Blah 2022 02 25:
+https://scapy.net/awesome-scapy/
