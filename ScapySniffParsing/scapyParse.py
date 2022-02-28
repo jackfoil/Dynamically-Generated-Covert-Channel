@@ -43,8 +43,27 @@ def countipdsts(pkts: PacketList) -> dict:
         else:   dsts[i[IP].dst] = 1
     return dsts
 
-def countmacs(pkts: PacketList) -> dict:
-    return
+def countmacsrcs(pkts: PacketList) -> dict:
+    srcs = {}
+    for i in pkts:
+        try:
+            src = i[Ether].src
+        except:
+            continue
+        if src in srcs: srcs[src] += 1
+        else:   srcs[i[Ether].src] = 1
+    return srcs
+
+def countmacdsts(pkts: PacketList) -> dict:
+    dsts = {}
+    for i in pkts:
+        try:
+            dst = i[Ether].dst
+        except:
+            continue
+        if dst in dsts: dsts[dst] += 1
+        else:   dsts[i[Ether].dst] = 1
+    return dsts
 
 def counttimes(pkts: PacketList) -> dict:
     t = {}
@@ -52,7 +71,7 @@ def counttimes(pkts: PacketList) -> dict:
         t[i]=datetime.fromtimestamp(j.time).strftime("%H:%M:%S.%f")
     return t
 
-def displaycount(proto: dict, t: int) -> None:
+def displayproto(proto: dict, t: int) -> None:
     """ Pretty prints protocols and counts for each. """
     for i,j in proto["layers"].items():
         print("{} : {}/{}".format(i,j,t))
@@ -69,8 +88,17 @@ def displaydestinations(proto: dict) -> None:
     for i,j in proto["ipdsts"].items():
         print("{} : {}".format(i,j))  
 
+def displaymacsources(proto: dict) -> None:
+        for i,j in proto["macsrcs"].items():
+            print("{} : {}".format(i,j))
+
+def displaymacdestinations(proto: dict) -> None:
+    for i,j in proto["macdsts"].items():
+        print("{} : {}".format(i,j))
+
 if __name__ == """__main__""":
 
+    # assignments
     # assignments
     total = 10
     pcap = sniff(count=total)
@@ -79,12 +107,17 @@ if __name__ == """__main__""":
     track["times"] = counttimes(pcap)
     track["ipsrcs"] = countipsrcs(pcap)
     track["ipdsts"] = countipdsts(pcap)
-
+    track["macsrcs"] = countmacsrcs(pcap)
+    track["macdsts"] = countmacdsts(pcap)
+    
     # display
-    displaycount(track,total)
+    displayproto(track,total)
     displaytimes(track)
     displaysources(track)
     displaydestinations(track)
+    displaymacsources(track)
+    displaymacdestinations(track)
+    
 
 #notes: maybe have dictionary of possible protocols for each layer
 #       update count of each layer & display counts
@@ -92,4 +125,11 @@ if __name__ == """__main__""":
 #       maybe can use .aliastypes to get packet layer numbers
 
 
-    
+# mac src, dst
+# all protocols & sub protocols
+# ip src, dst
+# packet creation times
+
+# to add
+# source port
+# destination port
