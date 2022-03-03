@@ -19,7 +19,7 @@ Pip install dependicies for the complete scapy module
 Install the latest version of [Npcap](https://nmap.org/npcap/#download) & [MikTex](https://miktex.org/download)
 
 Next git clone scapy repository & install the scapy module  
-`git clone `
+`git clone https://github.com/secdev/scapy`
 `python setup.py install`
 
 Run the scapy command in preferred shell
