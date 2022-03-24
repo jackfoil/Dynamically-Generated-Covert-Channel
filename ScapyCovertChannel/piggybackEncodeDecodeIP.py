@@ -5,8 +5,9 @@ def decodeIP(IP):
     decimal = ipSplit[3]
     binary = bin(int(decimal))
     binary = str(binary[2:].zfill(8))
+    seq = ipSplit[2]
 
-    return binary
+    return binary,seq
 
 # IP is a string representation of a normal IP address
 # binary is a string representation of an byte of binary data that you want to hide
