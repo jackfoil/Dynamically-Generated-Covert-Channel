@@ -23,7 +23,8 @@ if __name__ == "__main__":
     print("hi")
     if (not isSizeHigh and not isPingHigh):
         socketTiming(port, filepath)
-    print("bye")
+        print("bye")
+        
     elif (isTrafficHigh):
         piggybackStorage(ip_addr, port, filepath)
 
