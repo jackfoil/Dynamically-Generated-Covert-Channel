@@ -7,18 +7,18 @@ import ListenerActiveStorage
 import ListenerSocketTiming
 import subprocess
 
+##gets the ip address of the host
+ip_addr = socket.gethostbyname(socket.gethostname())
+filepath = ""
+port = 12003
+
 
 #########Front End of the Porgram (Console)
 def console():
     tprint("DGCC", "rnd-large")
-    filepath = ""
     name = "payload"
-    port = 12003
     icon = "Default"
 
-
-    ##gets the ip address of the host
-    ip_addr = socket.gethostbyname(socket.gethostname())
 
 
     while(True):
