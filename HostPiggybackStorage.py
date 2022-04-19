@@ -3,9 +3,13 @@ from scapy.all import *
 from heapq import heappop, heappush
 from piggybackEncodeDecodeIP import decodeIP
 from math import floor
+import sys
+
 conf.promisc = False
 
-port = "10000"
+#port = "10000"
+
+
 
 
 def check_eof(ip: str) -> bool:
@@ -63,5 +67,6 @@ def startlisening(port):
 
 
 if __name__ == "__main__":
+    port = sys.argv[1]
     startlisening(port)
     print("This works")

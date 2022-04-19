@@ -137,8 +137,8 @@ def makeexe(name, icon):
 
 
 def liseners(ip, port):
-    subprocess.Popen('python HostCovertFile.py', creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
-    subprocess.Popen('python HostPiggybackStorage.py', creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage
+    subprocess.Popen('python HostCovertFile.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
+    subprocess.Popen('python HostPiggybackStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage
 
 
 if __name__ == '__main__':
@@ -146,4 +146,3 @@ if __name__ == '__main__':
     #payload(filepath, name, Ip, port)
     #makeexe(name, icon)
     liseners(Ip, port)
-    #pyautogui.hotkey('ctrl', 'esc')
