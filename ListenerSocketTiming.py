@@ -16,7 +16,7 @@ import sys
 def timstartLis(ip, port, keypressed = False):
     try:
         while(keypressed == False):
-            check = input("Press any key to continue")
+            check = input("Type in run when ready to receive: ")
             if(check == "run"):
                 break
             else:
