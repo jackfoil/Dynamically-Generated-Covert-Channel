@@ -1,5 +1,5 @@
 # Dynamically Generated Covert Channel
-### A covert channel generator designed for cyber security proffessionals.
+### A covert channel generator designed for cyber security professionals.
 # Installation
 ## **Scapy Setup**
 **Pre-requisites**  
