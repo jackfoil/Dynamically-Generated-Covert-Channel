@@ -100,7 +100,7 @@ def timstartLis(ip, port, keypressed = False):
         # convert the binary covert message into bites
         j = 0
         hexArray=[]
-        for i in range(floor(len(covertBin)/8) - 3): # -3 to remove EOF, could be done a better way
+        for i in range(floor(len(covertBin)/8)): 
             j=i*8
             if(covertBin[j:j+8].zfill(8) == None):
                 print("NONE")
@@ -123,7 +123,7 @@ def timstartLis(ip, port, keypressed = False):
             print ("\nCovert Message: ",covert[:covert.rindex("EOF")])
         except ValueError:
             print (covert)
-            
+
     except Exception:
         print("Did not establish connection Try again")
         timstartLis(ip, port)
@@ -135,10 +135,3 @@ if __name__ == '__main__':
     ip = sys.argv[1]
     port = int(sys.argv[2])
     timstartLis(ip, port)
-
-
-
-
-
-
-

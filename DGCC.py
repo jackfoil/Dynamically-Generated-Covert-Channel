@@ -14,20 +14,24 @@ if __name__ == "__main__":
 
     filepath = "Hi.txt"
 ##    ip_addr = "google.com"
+    print("gathering network statistics...")
     isPingHigh, isSizeHigh, isTrafficHigh = fitnessFunction(ip_addr, filepath, pingThreshhold, sizeThreshhold, trafficThreshold)
-
-    isSizeHigh = True
-    isPingHigh = True
+    print("gathered\n")
+    isSizeHigh = False
+    isPingHigh = False
     isTrafficHigh = False
-    
 
-    print("hi")
+
+
 
     if (not isSizeHigh and not isPingHigh):
+        print("socket")
         socketTiming(port, filepath)
-        
+
     elif (isTrafficHigh):
+        print("piggback storage")
         piggybackStorage(ip_addr, port, filepath)
 
     else:
+        print("active storage")
         activeStorage(ip_addr, port, filepath)
