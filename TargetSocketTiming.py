@@ -15,8 +15,8 @@ def socketTiming(port, filepath):
     c, addr = s.accept()
 
     # timing constants
-    ZERO = .025
-    ONE = .1
+    ZERO = .1
+    ONE = 1
 
 
     # import covert file as binary data
@@ -41,3 +41,7 @@ def socketTiming(port, filepath):
     # send EOF to know when to stop listening
     c.send("EOF".encode())
     c.close()
+
+
+if __name__ == '__main__':
+    socketTiming(10000, 'Hi.txt')
