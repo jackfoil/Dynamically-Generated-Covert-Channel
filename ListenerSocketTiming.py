@@ -1,3 +1,4 @@
+#! python
 import socket
 from sys import stdout
 from time import time
@@ -36,8 +37,8 @@ def timstartLis(ip, port, keypressed = False):
         DEBUG = 0
 
         # timing constants
-        ZERO = .025
-        ONE = .1
+        ZERO = .1
+        ONE = 1
         IGNORE = (ZERO + ONE)/2
         TOOHIGH = max(ONE,ZERO)*5
 
