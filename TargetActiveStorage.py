@@ -29,11 +29,5 @@ def activeStorage(ip_addr, port, filepath):
         sentpacket= sr1(packet,retry = 0, timeout = 1)
 
 
-
-
-    #srcip= encodeIP(spoffed_ip, covertBin[13], 13)
-    #packet=(IP(dst="138.47.140.93", src= srcip )/TCP(sport = port))
-    #sentpacket = sr1(packet, retry = 0, timeout = 1)
-
     pac=(IP(dst=ip_host, src= EOF)/TCP(sport = port))
     sent = sr1(pac,retry = 0, timeout = 1)
