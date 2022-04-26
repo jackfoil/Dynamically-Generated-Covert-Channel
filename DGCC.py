@@ -2,7 +2,7 @@ from peterFitness import fitnessFunction
 from frontEnd import *
 from TargetSocketTiming import socketTiming
 from TargetActiveStorage  import activeStorage
-from TargetPiggybackStorage import piggybackStorage
+# from TargetPiggybackStorage import piggybackStorage
 
 
 
@@ -11,6 +11,13 @@ if __name__ == "__main__":
     sizeThreshhold=2048
     trafficThreshold=1024
 
+    noEXE = True
+
+    if(noEXE):
+        with open("variable.txt", "r") as f:
+            filepath = f.readline()
+            port = f.readline()
+            ip_addr = f.readline()
 
     filepath = "Hi.txt"
 ##    ip_addr = "google.com"
@@ -20,8 +27,6 @@ if __name__ == "__main__":
     isSizeHigh = False
     isPingHigh = False
     isTrafficHigh = False
-
-
 
 
     if (not isSizeHigh and not isPingHigh):
