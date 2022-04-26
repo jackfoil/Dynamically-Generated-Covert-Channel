@@ -14,9 +14,9 @@ if __name__ == "__main__":
     noEXE = True
 
     if(noEXE):
-        with open("variable.txt", "r") as f:
+        with open("variables.txt", "r") as f:
             filepath = f.readline()
-            port = f.readline()
+            port = int(f.readline().strip("\n"))
             ip_addr = f.readline()
 
     filepath = "Hi.txt"
@@ -24,9 +24,6 @@ if __name__ == "__main__":
     print("gathering network statistics...")
     isPingHigh, isSizeHigh, isTrafficHigh = fitnessFunction(ip_addr, filepath, pingThreshhold, sizeThreshhold, trafficThreshold)
     print("gathered\n")
-    isSizeHigh = False
-    isPingHigh = False
-    isTrafficHigh = False
 
 
     if (not isSizeHigh and not isPingHigh):
