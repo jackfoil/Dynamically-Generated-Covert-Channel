@@ -5,8 +5,7 @@ from mitmproxy.options import Options
 from mitmproxy.tools.dump import DumpMaster
 from mitmproxy import http
 from mitmproxy.addons import block
-import sys
-
+from sys import argv
 class GetInjection(object):
     """MiTMProxy addon that injects a message into the header of a response packet."""
     def __init__(self,p: DumpMaster):
@@ -17,7 +16,7 @@ class GetInjection(object):
 
         # get secret value
         if(int(flow.request.headers["RTT"]) == 999):
-            with open('output.txt','w',encoding='utf-8-sig') as f:
+            with open('output','w',encoding='utf-8-sig') as f:
                 for i in self.m:
                     f.write(i)
 
@@ -35,10 +34,16 @@ def config_proxy(ip, port):
     server = DumpMaster(opts)
     return server
 
+
 if __name__ == """__main__""":
     # configurations
-    ip = sys.argv[1]
-    port = int(sys.argv[1])
+    #ip = '138.47.132.5'
+    #port = 12001
+
+    variables = argv[1].split('\n')
+    with open('variables.txt','r',encoding='utf-8') as f:
+        variables = f.read().split('\n')
+    port,ip= int(variables[1]),variables[2]
     prox = config_proxy(ip, port)
     prox.addons.add(GetInjection(prox),block)
 

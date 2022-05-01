@@ -1,7 +1,6 @@
 #! python
 from os import walk,path,startfile
-from django import conf
-from pynput.keyboard import Key, Controller
+from pynput.keyboard import Key, Controller, Listener
 from time import sleep
 import subprocess
 import pygetwindow as pw
@@ -14,8 +13,8 @@ Error Handling:
 2 Needs stealhify
 4 Needes function to disable proxy
 '''
-I = .1
-J = .5
+I = .2
+J = 1.05
 
 def _configCert()->None:
     subprocess.run(["powershell","-Command","certutil -addstore root mitmproxy-ca-cert.cer"],capture_output=True)
@@ -26,7 +25,18 @@ def _revertCert()->None:
 def _getWindow(app: str)->object:
     """Ensures the rigt window is in the foreground."""
     win = pw.getWindowsWithTitle(app)[0]
-    win.activate()
+    print(win.title)
+    while(True):
+        try:
+            win.activate()
+            win.minimize()
+            win.maximize()
+            break
+        except:
+            win = pw.getWindowsWithTitle(app)[0]
+            win.minimize()
+            win.maximize()
+        sleep(3)
     return win
 
 def getUser()->str:
@@ -65,7 +75,6 @@ def startExec(name:str,path:str) -> None:
 
 def ProxyFirefox() -> None:
     window = _getWindow('Firefox')
-
     config=[[Key.ctrl,'l'],'about:preferences',Key.enter,[Key.ctrl,'l'],Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,'proxy',
             Key.tab,Key.tab,Key.enter,Key.down,Key.down,Key.down,Key.tab,'127.0.0.1',Key.tab,'8081',Key.enter,[Key.ctrl,Key.shift,'q']]
 
@@ -92,12 +101,9 @@ def ProxyFirefox() -> None:
             kb.release(i)
             sleep(I)
 
-
 def ProxyChrome()-> None:
     """Configure system for proxying traffic from Chrome."""
     window = _getWindow('Google Chrome')
-
-    #_stealthify(window)
     config = [[Key.ctrl,'l'],'chrome://settings/?search=proxy', Key.enter, Key.tab, Key.tab,
                Key.tab, Key.tab, Key.enter, Key.tab, Key.tab,Key.space, Key.backspace, Key.tab, Key.tab, Key.tab, [Key.ctrl, 'a'], '1','2','7','.','0','.','0','.','1',
                Key.tab,[Key.ctrl, 'a'],'8','0','8','1',Key.tab,Key.tab,Key.tab,Key.enter,[Key.alt, Key.f4],[Key.alt, Key.f4]]
@@ -128,12 +134,13 @@ def ProxyChrome()-> None:
 def ProxyEdge()->None:
     """Configure system for proxying internet traffic from Microsoft Edge."""
     window = _getWindow('Edge')
-    config = [[Key.ctrl,'l'],'edge://settings/?search=proxy',Key.enter, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab,
-              Key.tab, Key.enter, Key.backspace, Key.tab, Key.tab, Key.tab, Key.space, Key.tab, [Key.ctrl, 'a'],'1','2','7','.','0','.','0','.','1', Key.tab,
+    config = [[Key.ctrl,'l'],'edge://settings/?search=proxy',Key.enter, [Key.ctrl,'l'], Key.esc,Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab,
+              Key.tab, Key.tab, Key.tab, Key.tab, Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.enter, Key.backspace, Key.tab, Key.tab, Key.tab, Key.space, Key.tab, [Key.ctrl, 'a'],'1','2','7','.','0','.','0','.','1', Key.tab,
               [Key.ctrl, 'a'],'8','0','8','1',Key.tab,Key.tab,Key.tab,Key.enter,[Key.alt, Key.f4],[Key.alt, Key.f4]]
     kb = Controller()
     for i in config:
         if type(i) is list:
+            sleep(I)
             for j in i:
                 kb.press(j)
                 sleep(I)
@@ -147,10 +154,13 @@ def ProxyEdge()->None:
                 kb.release(j)
                 sleep(I)
         else:
-            if isinstance(i,Key): sleep(J)
-            kb.press(i)
-            if i is Key.enter: sleep(J)
-            else: sleep(I)
+            sleep(J)
+            if i is Key.enter: 
+                kb.touch(i,True)
+                sleep(J)
+            else:
+                kb.press(i) 
+                sleep(I)
             kb.release(i)
             if i is Key.enter: sleep(J)
             else: sleep(I)
@@ -160,7 +170,7 @@ def releaseProxyFirefox():
     window = _getWindow('Firefox')
     config = [[Key.ctrl,'l'],'about:preferences',Key.enter,[Key.ctrl,'l'],Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,'proxy',
              Key.tab,Key.tab,Key.enter,Key.up,Key.up,Key.up,Key.enter,[Key.ctrl,Key.shift,'q']]
-    
+    sleep(3)
     kb = Controller()
     for i in config:
         if type(i) is list:
@@ -178,13 +188,23 @@ def releaseProxyFirefox():
                 sleep(I)
         else:
             if isinstance(i,Key): sleep(J)
-            kb.press(i)
-            if i is Key.enter: sleep(J)
-            else: sleep(I)
-            kb.release(i)
-            if i is Key.enter: sleep(J)
-            else: sleep(I)
-
+            
+            if i is Key.enter: 
+                kb = Controller()
+                lis = Listener()
+                kb.press(i)
+                sleep(J)
+            else:
+                kb.press(i) 
+                sleep(I)
+            
+            if i is Key.enter: 
+                kb = Controller()
+                kb.release(i)
+                sleep(J)
+            else: 
+                kb.release(i)
+                sleep(I)
 
 def releaseProxyChrome()->None:
     """Disables chrome browser using key shortcuts."""
@@ -192,6 +212,7 @@ def releaseProxyChrome()->None:
     config = [[Key.ctrl,'l'],'chrome://settings/?search=proxy', Key.enter, Key.tab, Key.tab,
                Key.tab, Key.tab, Key.enter, Key.tab, Key.tab,Key.space, Key.backspace, Key.tab, Key.tab, Key.tab,Key.space,
                [Key.alt, Key.f4],[Key.alt, Key.f4]]
+    sleep(3)
     kb = Controller()
     for i in config:
         if type(i) is list:
@@ -218,8 +239,9 @@ def releaseProxyChrome()->None:
 def releaseProxyEdge():
     """Disables edge browser using key shortcuts."""
     window=_getWindow('Edge')
-    config = [[Key.ctrl,'l'],'edge://settings/?search=proxy',Key.enter, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab,
-              Key.tab, Key.enter, Key.backspace, Key.tab, Key.tab, Key.tab, Key.space, [Key.alt, Key.f4],[Key.alt, Key.f4]]
+    config = [[Key.ctrl,'l'],'edge://settings/?search=proxy',Key.enter, [Key.ctrl,'l'], Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab, Key.tab,
+              Key.tab, Key.tab, Key.tab, Key.tab, Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.enter, Key.backspace, Key.tab, Key.tab, Key.tab, Key.space, Key.tab, [Key.ctrl, 'a'],'1','2','7','.','0','.','0','.','1', Key.tab,
+              [Key.ctrl, 'a'],'8','0','8','1',Key.tab,Key.tab,Key.tab,Key.enter,[Key.alt, Key.f4],[Key.alt, Key.f4]]
     kb = Controller()
     for i in config:
         if type(i) is list:
@@ -237,25 +259,39 @@ def releaseProxyEdge():
                 sleep(I)
         else:
             if isinstance(i,Key): sleep(J)
-            kb.press(i)
-            if i is Key.enter: sleep(J)
-            else: sleep(I)
-            kb.release(i)
-            if i is Key.enter: sleep(J)
-            else: sleep(I)
+            if i is Key.enter: 
+                kb = Controller()
+                kb.press(i)
+                sleep(J)
+            else:
+                kb.press(i) 
+                sleep(I)
+            
+            if i is Key.enter: 
+                kb.release(i)
+                sleep(J)
+            else: 
+                kb.release(i)
+                sleep(I)
 
 
 def set():
-    _configCert()
+    #_configCert()
+    # configurations = {
+    #     'edge':ProxyEdge,
+    #     'chrome':ProxyChrome,
+    #     'firefox':ProxyFirefox
+    # }
     configurations = {
-        'edge':ProxyEdge,
-        'chrome':ProxyChrome,
         'firefox':ProxyFirefox
     }
+    # browsers = {
+    # 'edge' : ['Microsoft Edge','Microsoft Edge','Microsoft Edge','msedge.exe'],
+    # 'chrome' : ['Google Chrome','Google Chrome', 'Google Chrome','chrome.exe'],
+    # 'firefox' : ['Firefox','Firefox','Firefox','firefox.exe']
+    # }
     browsers = {
-    'edge' : ['Microsoft Edge','Microsoft Edge','Microsoft Edge','msedge.exe'],
-    'chrome' : ['Google Chrome','Google Chrome', 'Google Chrome','chrome.exe'],
-    'firefox' : ['Firefox','Firefox','Firefox','firefox.exe']
+        'firefox' : ['Firefox','Firefox','Firefox','firefox.exe']
     }
     options = ['start_menu','task_bar_path','desktop_path','exec_path']
     attempt = 0
@@ -294,16 +330,22 @@ def set():
             flag=0
 
 def release():
-    _revertCert()
+    #_revertCert()
     configurations = {
-        'edge':releaseProxyEdge,
-        'chrome':releaseProxyChrome,
         'firefox':releaseProxyFirefox
     }
+    # configurations = {
+    #     'edge':releaseProxyEdge,
+    #     'chrome':releaseProxyChrome,
+    #     'firefox':releaseProxyFirefox
+    # }
+    # browsers = {
+    # 'edge' : ['Microsoft Edge','Microsoft Edge','Microsoft Edge','msedge.exe'],
+    # 'chrome' : ['Google Chrome','Google Chrome', 'Google Chrome','chrome.exe'],
+    # 'firefox' : ['Firefox','Firefox','Firefox','firefox.exe']
+    # }
     browsers = {
-    'edge' : ['Microsoft Edge','Microsoft Edge','Microsoft Edge','msedge.exe'],
-    'chrome' : ['Google Chrome','Google Chrome', 'Google Chrome','chrome.exe'],
-    'firefox' : ['Firefox','Firefox','Firefox','firefox.exe']
+        'firefox' : ['Firefox','Firefox','Firefox','firefox.exe']
     }
     options = ['start_menu','task_bar_path','desktop_path','exec_path']
     attempt = 0
