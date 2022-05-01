@@ -1,4 +1,4 @@
-from ping3 import ping, verbose_ping
+from ping3 import ping
 import os
 from scapy.all import sniff, conf
 
@@ -21,8 +21,7 @@ def fitnessFunction(hostAddr, targetPath, pingThreshhold, sizeThreshhold, traffi
     response=[]
 
     #ping and average response time
-    for i in range(10):
-        response.append(ping(hostAddr))
+    for _ in range(10): response.append(ping(hostAddr))
     isPingHigh=(sum(response)/len(response))>pingThreshhold
     # print(isPingHigh)
 

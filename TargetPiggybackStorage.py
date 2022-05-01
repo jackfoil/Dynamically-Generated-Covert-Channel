@@ -1,5 +1,4 @@
 #! python
-from django.http import HttpResponse
 from mitmproxy.options import Options
 from mitmproxy.tools.dump import DumpMaster
 from mitmproxy import http
@@ -80,5 +79,5 @@ def piggybackStorage(ip:str,port:int,fp:str)->None:
     browser.release()
 
 if __name__ == "__main__":
-    piggybackStorage('138.47.131.106',8081,'rainbow.png')
-    
+    piggybackStorage('127.0.0.1',8081,'rainbow.png')
+   

@@ -75,7 +75,7 @@ def startExec(name:str,path:str) -> None:
 
 def ProxyFirefox() -> None:
     window = _getWindow('Firefox')
-    config=[[Key.ctrl,'l'],'about:preferences',Key.enter,[Key.ctrl,'l'],Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,'proxy',
+    config=[[Key.ctrl,'l'],[Key.ctrl,'a'],'about:preferences',Key.enter,[Key.ctrl,'l'],Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,'proxy',
             Key.tab,Key.tab,Key.enter,Key.down,Key.down,Key.down,Key.tab,'127.0.0.1',Key.tab,'8081',Key.enter,[Key.ctrl,Key.shift,'q']]
 
     kb = Controller()
@@ -168,7 +168,7 @@ def ProxyEdge()->None:
 def releaseProxyFirefox():
     """Disables firefox browser using key shortcuts."""
     window = _getWindow('Firefox')
-    config = [[Key.ctrl,'l'],'about:preferences',Key.enter,[Key.ctrl,'l'],Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,'proxy',
+    config = [[Key.ctrl,'l'],[Key.ctrl,'a'],'about:preferences',Key.enter,[Key.ctrl,'l'],Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,Key.tab,'proxy',
              Key.tab,Key.tab,Key.enter,Key.up,Key.up,Key.up,Key.enter,[Key.ctrl,Key.shift,'q']]
     sleep(3)
     kb = Controller()

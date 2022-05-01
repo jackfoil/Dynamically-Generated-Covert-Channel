@@ -1,3 +1,4 @@
+#! python
 ##Lirbaries
 from art import *
 import sys
@@ -143,8 +144,8 @@ def makeexe(name, icon):
 
 def liseners(ip, port):
     subprocess.Popen('python ListenerSocketTiming.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
-    subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) #PiggybackStorage
-
+    subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # active storage
+    subprocess.Popen('PassiveServer.exe variables.txt ',creationflags=subprocess.CREATE_NEW_CONSOLE) # piggyback 
 
 if __name__ == '__main__':
     noEXE = True
@@ -156,8 +157,8 @@ if __name__ == '__main__':
         makeexe(name, icon)
     else:
         with open("variables.txt", "w") as f:
-            f.write("filepath = " + filepath + "\n")
-            f.write("port = " + str(port) + "\n")
-            f.write("ip_address = " + ip_addr +"\n")
+            f.write(filepath + "\n")
+            f.write(str(port) + "\n")
+            f.write(ip_addr +"\n")
 
     liseners(Ip, port)
