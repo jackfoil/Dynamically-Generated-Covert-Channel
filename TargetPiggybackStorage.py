@@ -66,6 +66,8 @@ def piggybackStorage(ip:str,port:int,fp:str)->None:
             for c in line:
                 input.append(c)
     input.append(999)
+    input.append(999)
+    input.append(999)
     
     # configurations
     prox = config_proxy()
